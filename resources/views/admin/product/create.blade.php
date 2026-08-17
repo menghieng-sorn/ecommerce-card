@@ -1,6 +1,11 @@
 <x-app-layout>
     <section class="wsus__product mt_145 pb_100">
         <div class="container">
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <div class="alert alert-danger">{{ $error }}</div>
+                @endforeach
+            @endif
             <h4 class="pb-3 fw-normal fs-4">Dashboard</h4>
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -8,38 +13,51 @@
                     <a href="{{ route('dashboard') }}" class="btn btn-primary">Back</a>
                 </div>
                 <div class="card-body">
-                    <div class="form-group mb-3">
-                        <label class="form-label" for="">Images</label>
-                        <x-text-input type='file' class="form-control" name="images" />
-                    </div>
-                    <div class="form-group mb-3">
-                        <dev for="" class="form-label">Name</dev>
-                        <x-text-input type="text" name="name" class="form-control" />
-                    </div>
-                    <div class="form-group mb-3">
-                        <dev for="" class="form-label">Price</dev>
-                        <x-text-input type="text" name="price" class="form-control" />
-                    </div>
-                    <div class="form-group mb-3">
-                        <dev for="" class="form-label">Colors</dev>
-                        <x-text-input type="text" name="colors" class="form-control" />
-                    </div>
-                    <div class="form-group mb-3">
-                        <dev for="" class="form-label">Short Description</dev>
-                        <x-text-input type="text" name="short-description" class="form-control" />
-                    </div>
-                    <div class="form-group mb-3">
-                        <dev for="" class="form-label">Qty</dev>
-                        <x-text-input type="text" name="qty" class="form-control" />
-                    </div>
-                    <div class="form-group mb-3">
-                        <dev for="" class="form-label">Sku</dev>
-                        <x-text-input type="text" name="sku" class="form-control" />
-                    </div>
-                    <div class="form-group mb-3">
-                        <dev for="" class="form-label">Decription</dev>
-                        <textarea name="name" class="form-control" id="editor" cols="10" rows="30"></textarea>
-                    </div>
+                    <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="">Image</label>
+                            <x-text-input type='file' class="form-control" name="image" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="">Images</label>
+                            <x-text-input type='file' class="form-control" name="images[]" multiple/>
+                        </div>
+                        <div class="form-group mb-3">
+                            <dev for="" class="form-label">Name</dev>
+                            <x-text-input type="text" name="name" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <dev for="" class="form-label">Price</dev>
+                            <x-text-input type="text" name="price" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <dev for="" class="form-label">Colors</dev>
+                            <x-select-input name="color">
+                                <option value="">Select</option>
+                                <option value="black">Black</option>
+                                <option value="green">Green</option>
+                                <option value="red">Red</option>
+                            </x-select-input>
+                        </div>
+                        <div class="form-group mb-3">
+                            <dev for="" class="form-label">Short Description</dev>
+                            <x-text-input type="text" name="short-description" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <dev for="" class="form-label">Qty</dev>
+                            <x-text-input type="text" name="qty" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <dev for="" class="form-label">Sku</dev>
+                            <x-text-input type="text" name="sku" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <dev for="" class="form-label">Decription</dev>
+                            <textarea name="description" class="form-control" id="editor" cols="10" rows="30"></textarea>
+                        </div>
+                        <button class="btn-primary btn" type="submit">Submit</button>
+                    </form>
                 </div>
             </div>
         </div>
