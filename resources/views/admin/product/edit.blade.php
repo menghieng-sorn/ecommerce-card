@@ -13,26 +13,26 @@
                     <a href="{{ route('product.index') }}" class="btn btn-primary">Back</a>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('product.edit') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group mb-3">
                             <label class="form-label" for="">Image</label>
-                            <x-text-input type='file' class="form-control" name="image" />
+                            <x-text-input type='file' class="form-control" name="image"/>
                         </div>
                         <div class="form-group mb-3">
                             <label class="form-label" for="">Images</label>
                             <x-text-input type='file' class="form-control" name="images[]" multiple/>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Name</dev>
-                            <x-text-input type="text" name="name" class="form-control" />
+                            <div for="" class="form-label">Name</div>
+                            <x-text-input type="text" name="name" class="form-control" value="{{ $product->name }}"/>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Price</dev>
-                            <x-text-input type="text" name="price" class="form-control" />
+                            <div for="" class="form-label">Price</div>
+                            <x-text-input type="text" name="price" class="form-control" value="{{ $product->price }}/>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Colors</dev>
+                            <div for="" class="form-label">Colors</div>
                             <x-select-input name="color[]" multiple>
                                 <option value="">Select</option>
                                 <option value="black">Black</option>
@@ -41,20 +41,20 @@
                             </x-select-input>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Short Description</dev>
-                            <x-text-input type="text" name="short_description" class="form-control" />
+                            <div for="" class="form-label">Short Description</div>
+                            <x-text-input type="text" name="short_description" class="form-control" value="{{ $product->short_desctiption }}/>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Qty</dev>
-                            <x-text-input type="text" name="qty" class="form-control" />
+                            <div for="" class="form-label">Qty</div>
+                            <x-text-input type="text" name="qty" class="form-control" value="{{ $product->qty }}/>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Sku</dev>
-                            <x-text-input type="text" name="sku" class="form-control" />
+                            <div for="" class="form-label">Sku</div>
+                            <x-text-input type="text" name="sku" class="form-control" value="{{ $product->sku }}/>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Decription</dev>
-                            <textarea name="description" class="form-control" id="editor" cols="10" rows="30"></textarea>
+                            <div for="" class="form-label">Decription</div>
+                            <textarea name="description" class="form-control" id="editor" cols="10" rows="30">{!! $product->description !!}</textarea>
                         </div>
                         <button class="btn-primary btn" type="submit">Submit</button>
                     </form>

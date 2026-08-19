@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
 use App\Models\Product;
+use App\Models\ProductColor;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -11,9 +13,9 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-
+    public function index() {
+        $products = Product::all();
+        return view('admin.dashboard',compact('products'));
     }
 
     /**
@@ -27,11 +29,51 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductStoreRequest $request)
+    public function store(Request $request)
     {
-        dd($request->all());
-    }
+        $product = new Product();
 
+        //Insert Product Single Image
+        if ($request->hasFile('images')) {
+            $image = $request->file('image');
+            $fileName = $image->store('', 'public');
+            $filePath = 'uploads/' . $fileName;
+            $product->image = $filePath;
+        }
+        //Insert Product Items
+
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->short_description = $request->short_description;
+        $product->qty = $request->qty;
+        $product->sku = $request->sku;
+        $product->description = $request->description;
+        $product->save();
+
+        //Insert Product Color
+        if ($request->has('colors') && $request->filled('colors')) {
+            foreach ($request->colors as $color) {
+                ProductColor::create([
+                    'product_id' => $product->id,
+                    'name' => $color
+                ]);
+            }
+        }
+        //Insert Product Multi Images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                //store image
+                $fileName = $image->store('', 'public');
+                $filePath = 'uploads/' . $fileName;
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path' => $filePath
+                ]);
+            }
+        }
+        return redirect()->back();
+    }
     /**
      * Display the specified resource.
      */
@@ -43,9 +85,10 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        return view('admin.product.edit',compact('product'));
     }
 
     /**
@@ -53,7 +96,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        dd($request->all());
     }
 
     /**
