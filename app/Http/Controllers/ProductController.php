@@ -33,6 +33,7 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
+        dd($request->all());
         $product = new Product();
         //Insert Product Single Image
         if ($request->hasFile('images')) {
