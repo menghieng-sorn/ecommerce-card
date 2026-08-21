@@ -165,7 +165,6 @@ class ProductController extends Controller
             File::delete(public_path($image->path));
         }
         $product->delete();
-
         return redirect()->back();
     }
 }

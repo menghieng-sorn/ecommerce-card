@@ -1,11 +1,18 @@
 <?php
 
+use App\Http\Controllers\AddToCardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-Route::get('/',function(){
-    return view('page.home');
-});
+
+Route::get('/',[ProductPageController::class,'index'])->name('home');
+Route::get('/product-detail/{id}',[ProductPageController::class,'show'])->name('product.detail');
+
+//Cart route
+Route::post('/add-to-cart/{id}', [AddToCardController::class, 'store'])
+    ->name('add-to-cart');
+
 Route::get('/dashboard',[ProductController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
