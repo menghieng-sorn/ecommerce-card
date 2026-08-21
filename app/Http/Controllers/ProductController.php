@@ -33,7 +33,6 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
-        dd($request->all());
         $product = new Product();
         //Insert Product Single Image
         if ($request->hasFile('images')) {
@@ -157,8 +156,16 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->colors()->delete();
+        File::delete(public_path($product->image));
+        foreach($product->images as $image){
+            File::delete(public_path($image->path));
+        }
+        $product->delete();
+
+        return redirect()->back();
     }
 }

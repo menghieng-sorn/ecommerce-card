@@ -28,8 +28,14 @@
                             <td>{{ $product->price }}</td>
                             <td>{{ $product->qty }}</td>
                             <td>
-                                <a class="btn btn-primary" href="{{ route('product.edit',$product->id) }}" aria-label="">Edit</a>
-                                <a class="btn btn-danger" href="" aria-label="">Delete</a>
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                    <a class="btn btn-primary" href="{{ route('product.edit',$product->id) }}" aria-label="">Edit</a>
+                                    <form action="{{ route('product.destroy',$product->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @endforeach

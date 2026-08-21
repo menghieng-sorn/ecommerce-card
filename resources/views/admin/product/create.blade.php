@@ -54,7 +54,7 @@
                         </div>
                         <div class="form-group mb-3">
                             <label for="" class="form-label">Decription</label>
-                            <textarea name="description" class="form-control" id="editor" cols="10" rows="30">{{ old('description') }}"</textarea>
+                            <textarea name="description" class="form-control" id="editor" cols="10" rows="30">{{ old('description') }}</textarea>
                         </div>
                         <button class="btn-primary btn" type="submit">Submit</button>
                     </form>
