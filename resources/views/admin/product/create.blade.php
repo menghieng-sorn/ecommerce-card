@@ -25,11 +25,11 @@
                         </div>
                         <div class="form-group mb-3">
                             <label for="" class="form-label">Name</label>
-                            <x-text-input type="text" name="name" class="form-control" />
+                            <x-text-input type="text" name="name" class="form-control" value="{{ old('name') }}"/>
                         </div>
                         <div class="form-group mb-3">
                             <label for="" class="form-label">Price</label>
-                            <x-text-input type="text" name="price" class="form-control" />
+                            <x-text-input type="text" name="price" class="form-control" value="{{ old('price') }}"/>
                         </div>
                         <div class="form-group mb-3">
                             <label for="" class="form-label">Colors</label>
@@ -42,19 +42,19 @@
                         </div>
                         <div class="form-group mb-3">
                             <label for="" class="form-label">Short Description</label>
-                            <x-text-input type="text" name="short_description" class="form-control" />
+                            <x-text-input type="text" name="short_description" class="form-control" value="{{ old('short_decription') }}"/>
                         </div>
                         <div class="form-group mb-3">
                             <dev for="" class="form-label">Qty</dev>
-                            <x-text-input type="text" name="qty" class="form-control" />
+                            <x-text-input type="text" name="qty" class="form-control" value="{{ old('qty') }}"/>
                         </div>
                         <div class="form-group mb-3">
                             <dev for="" class="form-label">Sku</dev>
-                            <x-text-input type="text" name="sku" class="form-control" />
+                            <x-text-input type="text" name="sku" class="form-control" value="{{ old('sku') }}"/>
                         </div>
                         <div class="form-group mb-3">
                             <label for="" class="form-label">Decription</label>
-                            <textarea name="description" class="form-control" id="editor" cols="10" rows="30"></textarea>
+                            <textarea name="description" class="form-control" id="editor" cols="10" rows="30">value="{{ old('description') }}"</textarea>
                         </div>
                         <button class="btn-primary btn" type="submit">Submit</button>
                     </form>
