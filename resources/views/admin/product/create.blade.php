@@ -24,16 +24,16 @@
                             <x-text-input type='file' class="form-control" name="images[]" multiple/>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Name</dev>
+                            <label for="" class="form-label">Name</label>
                             <x-text-input type="text" name="name" class="form-control" />
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Price</dev>
+                            <label for="" class="form-label">Price</label>
                             <x-text-input type="text" name="price" class="form-control" />
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Colors</dev>
-                            <x-select-input name="color[]" multiple>
+                            <label for="" class="form-label">Colors</label>
+                            <x-select-input name="colors[]" multiple>
                                 <option value="">Select</option>
                                 <option value="black">Black</option>
                                 <option value="green">Green</option>
@@ -41,7 +41,7 @@
                             </x-select-input>
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Short Description</dev>
+                            <label for="" class="form-label">Short Description</label>
                             <x-text-input type="text" name="short_description" class="form-control" />
                         </div>
                         <div class="form-group mb-3">
@@ -53,7 +53,7 @@
                             <x-text-input type="text" name="sku" class="form-control" />
                         </div>
                         <div class="form-group mb-3">
-                            <dev for="" class="form-label">Decription</dev>
+                            <label for="" class="form-label">Decription</label>
                             <textarea name="description" class="form-control" id="editor" cols="10" rows="30"></textarea>
                         </div>
                         <button class="btn-primary btn" type="submit">Submit</button>
