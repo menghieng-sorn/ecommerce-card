@@ -152,7 +152,6 @@ class ProductController extends Controller
         }
         return redirect()->back();
     }
-
     /**
      * Remove the specified resource from storage.
      */
