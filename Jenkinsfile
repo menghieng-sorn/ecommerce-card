@@ -82,15 +82,33 @@ pipeline {
                 echo "Running Laravel tests..."
 
                 sh '''
-                    composer install \
-                        --no-interaction \
-                        --prefer-dist
+                    # Pull a PHP image that ships with composer so this stage
+                    # works on any agent regardless of installed tooling.
+                    docker pull composer:2
 
-                    cp .env.example .env
+                    # Install PHP dependencies via composer image.
+                    docker run --rm \
+                        -v "$PWD":/app \
+                        -w /app \
+                        composer:2 \
+                        composer install \
+                            --no-interaction \
+                            --prefer-dist \
+                            --no-progress
 
-                    php artisan key:generate
+                    # Run artisan commands via a PHP image that matches the
+                    # application's PHP version (adjust tag if needed).
+                    docker pull php:8.2-cli
 
-                    php artisan test
+                    docker run --rm \
+                        -v "$PWD":/app \
+                        -w /app \
+                        php:8.2-cli \
+                        bash -c "
+                            cp .env.example .env && \
+                            php artisan key:generate && \
+                            php artisan test
+                        "
                 '''
             }
         }
