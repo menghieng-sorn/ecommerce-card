@@ -81,35 +81,48 @@ pipeline {
 
                 echo "Running Laravel tests..."
 
-                sh '''
-                    # Pull a PHP image that ships with composer so this stage
-                    # works on any agent regardless of installed tooling.
-                    docker pull composer:2
+                script {
 
-                    # Install PHP dependencies via composer image.
-                    docker run --rm \
-                        -v "$PWD":/app \
-                        -w /app \
-                        composer:2 \
-                        composer install \
-                            --no-interaction \
-                            --prefer-dist \
-                            --no-progress
+                    // The Jenkins agent does not have PHP or composer installed,
+                    // so run the test stage on the Ubuntu server (which already
+                    // has docker for the other stages) via sshagent.
+                    sshagent(['slave2']) {
 
-                    # Run artisan commands via a PHP image that matches the
-                    # application's PHP version (adjust tag if needed).
-                    docker pull php:8.2-cli
+                        sh """
+                            ssh -o StrictHostKeyChecking=no \\
+                            ${BUILD_SERVER} \\
+                            "rm -rf ~/laravel-test && \\
+                            git clone --depth 1 \\
+                            https://github.com/menghieng-sorn/ecommerce-card.git \\
+                            ~/laravel-test && \\
+                            cd ~/laravel-test && \\
+                            docker pull composer:2 && \\
+                            docker run --rm \\
+                                -v \\"\$PWD\\":/app \\
+                                -w /app \\
+                                composer:2 \\
+                                composer install \\
+                                    --no-interaction \\
+                                    --prefer-dist \\
+                                    --no-progress && \\
+                            docker pull php:8.2-cli && \\
+                            docker run --rm \\
+                                -v \\"\$PWD\\":/app \\
+                                -w /app \\
+                                php:8.2-cli \\
+                                bash -c \\
+                                    'cp .env.example .env && \\
+                                    php artisan key:generate && \\
+                                    php artisan test'"
+                        """
 
-                    docker run --rm \
-                        -v "$PWD":/app \
-                        -w /app \
-                        php:8.2-cli \
-                        bash -c "
-                            cp .env.example .env && \
-                            php artisan key:generate && \
-                            php artisan test
-                        "
-                '''
+                        sh """
+                            ssh -o StrictHostKeyChecking=no \\
+                            ${BUILD_SERVER} \\
+                            "rm -rf ~/laravel-test"
+                        """
+                    }
+                }
             }
         }
 
