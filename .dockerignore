@@ -1,0 +1,56 @@
+# ==========================================
+# Docker build context exclusions
+# Keeps image small, builds fast, prevents leaking secrets.
+# ==========================================
+
+# Version control
+.git
+.gitignore
+.gitattributes
+.github
+
+# Local environment files (NEVER bake secrets into the image)
+.env
+.env.*
+!.env.example
+
+# Dependencies — re-installed inside the image
+vendor/
+node_modules/
+package-lock.json
+yarn.lock
+
+# Laravel caches — rebuilt inside the image
+bootstrap/cache/*.php
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*.log
+
+# Tests & dev tooling
+tests/
+phpunit.xml
+phpunit.xml.dist
+.vscode/
+.idea/
+*.swp
+
+# CI / Docker / Jenkins files (only used by the build pipeline, not at runtime)
+Jenkinsfile
+docker-compose*.yml
+.dockerignore
+Dockerfile
+docker/
+
+# Documentation
+README.md
+PRODUCTION.md
+CHANGELOG.md
+docs/
+*.md
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp

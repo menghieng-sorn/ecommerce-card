@@ -1,0 +1,52 @@
+# ==========================================
+# Caddy reverse proxy for ecommerce-card
+# Auto-issues Let's Encrypt TLS cert for your domain.
+#
+# Place this at /etc/caddy/Caddyfile on the Ubuntu host.
+# Replace `yourdomain.com` with your real domain.
+# ==========================================
+
+yourdomain.com, www.yourdomain.com {
+
+    # Encode responses with gzip
+    encode gzip zstd
+
+    # Forward to the Docker container's Nginx on port 80
+    reverse_proxy 127.0.0.1:80 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Forwarded-Host {host}
+    }
+
+    # Security headers (in addition to Nginx inside the container)
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "geolocation=(), microphone=(), camera=()"
+        # Hide Caddy version
+        -Server
+    }
+
+    # Healthcheck passthrough
+    @healthcheck path /healthcheck
+    handle @healthcheck {
+        reverse_proxy 127.0.0.1:80
+    }
+
+    # Access & error logs to journald / stdout
+    log {
+        output stdout
+        format console
+        level INFO
+    }
+}
+
+# Optional: HTTP → HTTPS redirect on the bare IP (for healthcheck from CI)
+http://192.168.137.207 {
+    reverse_proxy 127.0.0.1:80
+    redir /healthcheck https://yourdomain.com/healthcheck 301
+    respond "ecommerce-card running" 200
+}
