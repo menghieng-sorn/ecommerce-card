@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddToCardController;
+use App\Http\Controllers\CartPageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
@@ -12,6 +13,7 @@ Route::get('/product-detail/{id}',[ProductPageController::class,'show'])->name('
 //Cart route
 Route::post('/add-to-cart/{id}', [AddToCardController::class, 'store'])
     ->name('add-to-cart');
+Route::get('/cart',[CartPageController::class,'index'])->name('cart.index');
 
 Route::get('/dashboard',[ProductController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

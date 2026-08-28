@@ -8,12 +8,12 @@
                 <div class="col-lg-6 col-xl-5 wow fadeInLeft">
                     <div class="wsus__product_details_slider_area">
                         <div class="row slider-forFive">
-                             @foreach ($product->images as $image)
-                            <div class="col-xl-12">
-                                <div class="wsus__product_details_slide_show_img">
-                                    <img src="{{ asset($image->path) }}" alt="product" class="img-fluid w-100">
+                            @foreach ($product->images as $image)
+                                <div class="col-xl-12">
+                                    <div class="wsus__product_details_slide_show_img">
+                                        <img src="{{ asset($image->path) }}" alt="product" class="img-fluid w-100">
+                                    </div>
                                 </div>
-                            </div>
                             @endforeach
                         </div>
                         <div class="wsus__product_details_slider">
@@ -21,9 +21,9 @@
                                 @foreach ($product->images as $image)
                                     <div class="col-xl-2">
                                         <div class="wsus__product_details_slider_img">
-                                        <img src="{{ asset($image->path) }}" alt="product" class="img-fluid w-100">
+                                            <img src="{{ asset($image->path) }}" alt="product" class="img-fluid w-100">
+                                        </div>
                                     </div>
-                                </div>
                                 @endforeach
                             </div>
                         </div>
@@ -44,23 +44,21 @@
                         <p>{{ $product->short_description }}</p>
 
                         <h6 class="mt_30">Color</h6>
-                        <select class="select_2" name="state">
-                            <option value="AL">Select Color</option>
-                            <option value="">Red</option>
-                            <option value="">Yellow</option>
-                            <option value="">Blue</option>
-                            <option value="">Green</option>
-                            <option value="">Yellow</option>
+                        <select class="select_2 color" name="color">
+                            <option value="">Select Color</option>
+                            @foreach ($product->colors as $color)
+                                <option value="{{ $color->name }}">{{ $color->name }}</option>
+                            @endforeach
                         </select>
-
                         <div class="wsus__product_add_cart">
                             <div class="wsus__product_quantity">
-                                <button class="minus" type="submit"><i class="far fa-minus"></i></button>
-                                <input type="text" placeholder="01">
-                                <button class="plus" type="submit"><i class="far fa-plus"></i></button>
+                                <button class="minus decrement" type="button"><i class="far fa-minus"></i></button>
+                                <input type="text" placeholder="01" value="1" min="1" class="qty">
+                                <button class="plus increment" type="button"><i class="far fa-plus"></i></button>
                             </div>
-                            <div class="wsus__buy_cart_button">
-                                <a href="" class="common_btn add-to-cart" data-id="{{ $product->id }}">Add to Cart</a>
+                            <div class="wsus__buy_cart_button ">
+                                <a href="" class="common_btn add-to-cart" data-id="{{ $product->id }}">Add to
+                                    Cart</a>
                             </div>
                         </div>
                         <ul class="wishlist d-flex flex-wrap">
@@ -105,8 +103,7 @@
                             <div class="row mt_50 align-items-center">
                                 <div class="col-lg-5 col-xl-4 wow fadeInLeft">
                                     <div class="wsus__product_description_img">
-                                        <img src="{{ asset($product->image) }}" alt="product"
-                                            class="img-fluid w-100">
+                                        <img src="{{ asset($product->image) }}" alt="product" class="img-fluid w-100">
                                     </div>
                                 </div>
                                 <div class="col-lg-7 col-xl-8 wow fadeInRight">
@@ -136,23 +133,54 @@
 
     <x-slot name="scripts">
         <script>
-            $(document).ready(function(){
-                $(".add-to-cart").on("click",function(e){
+            $(document).ready(function() {
+                $(".add-to-cart").on("click", function(e) {
                     e.preventDefault();
                     let id = $(this).data('id');
+                    let color = $('.color').val();
+                    let qty = $('.qty').val();
 
-                     $.ajax({
-                        method : "POST",
-                        url : "{{ route('add-to-cart',':id') }}".replace(':id', id),
-                        data : {
-                          _token: "{{ csrf_token() }}",
+                    $.ajax({
+                        method: "POST",
+                        url: "{{ route('add-to-cart', ':id') }}".replace(':id', id),
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            color: color,
+                            qty: qty
                         },
-                        beforeSend: function(){},
-                        success: function(data){},
-                        error: function(xhr, status, error){                        }
+                        beforeSend: function() {
+                            if (validation()) {
+                                validation();
+                                return false;
+                            }
+                        },
+                        success: function(data) {
+                            if(data.status == 'ok'){
+                                $('cart-count').html(data.cart_count);
+                            }
+                        },
+                        error: function(xhr, status, error) {}
                     });
-
                 });
+                $(".increment").on("click", function() {
+                    let qty = $(".qty").val();
+                    qty = parseInt(qty) + 1;
+                    $(".qty").val(qty);
+                });
+                $(".decrement").on("click", function() {
+                    let qty = $(".qty").val();
+                    if (parseInt(qty) >= 1) {
+                        qty = parseInt(qty) - 1;
+                        $(".qty").val(qty);
+                    }
+                });
+
+                function validation() {
+                    let color = $('.color').val();
+                    if (color == "") {
+                        console.log("Color is required!");
+                    }
+                }
             })
         </script>
     </x-slot>
