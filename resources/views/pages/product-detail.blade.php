@@ -8,6 +8,11 @@
                 <div class="col-lg-6 col-xl-5 wow fadeInLeft">
                     <div class="wsus__product_details_slider_area">
                         <div class="row slider-forFive">
+                            <div class="col-xl-12">
+                                    <div class="wsus__product_details_slide_show_img">
+                                        <img src="{{ asset($product->image) }}" alt="product" class="img-fluid w-100">
+                                    </div>
+                            </div>
                             @foreach ($product->images as $image)
                                 <div class="col-xl-12">
                                     <div class="wsus__product_details_slide_show_img">
@@ -138,7 +143,9 @@
                     let id = $(this).data('id');
                     let color = $('.color').val();
                     let qty = parseInt($('.qty').val()) || 1;
-
+                    if (!validation()) {
+                        return;
+                    }
                     $.ajax({
                         method: "POST",
                         url: "{{ route('add-to-cart', ':id') }}".replace(':id', id),
@@ -147,15 +154,18 @@
                             color: color,
                             qty: qty
                         },
-                        beforeSend: function() {
-                            if(validation()){
-                                return false
-                            }
-                        },
+                        // beforeSend: function() {
+                        //     if (!validation()) {
+                        //         return
+                        //     }
+                        // },
                         success: function(data) {
                             if(data.status == 'ok'){
-                                $('cart-count').html(data.cart_count);
-                                window.location.reload();
+                                $('.cart-count').html(data.cart_count);
+                                notyf.success('Added to Cart successfull');
+                                // setTimeout(function() {
+                                //     window.location.reload();
+                                // }, 1500);
                             }
                         },
                         error: function(xhr, status, error) {}
@@ -177,10 +187,12 @@
                 function validation() {
                     let color = $('.color').val();
                     if (!color) {
-                        alert("Please choose color");
-                        return true;
+                        notyf.error("Please select a color.");
+                        return false;
+
                     }
-                    return false;
+                    return true;
+
                 }
             })
         </script>

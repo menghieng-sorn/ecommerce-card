@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/slick.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+
     <!-- Scripts -->
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
 </head>
@@ -38,6 +40,9 @@
     <script src="{{ asset('assets/js/tinymce/tinymce.min.js') }}"></script>
     <!--main/custom js-->
     <script src="{{ asset('assets/js/main.js') }}"></script>
+    <!-- Notyf -->
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script> var notyf = new Notyf(); </script>
     {{ $scripts ?? '' }}
 </body>
 

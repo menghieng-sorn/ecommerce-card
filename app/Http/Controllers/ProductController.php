@@ -72,6 +72,7 @@ class ProductController extends Controller
                 ]);
             }
         }
+        notyf('Product created successfully.');
         return redirect()->back();
     }
     /**
@@ -150,6 +151,7 @@ class ProductController extends Controller
                 ]);
             }
         }
+        notyf('Product updated successfully.');
         return redirect()->back();
     }
     /**
@@ -164,6 +166,7 @@ class ProductController extends Controller
             File::delete(public_path($image->path));
         }
         $product->delete();
+        notyf()->error('Product deleted successfully.');
         return redirect()->back();
     }
 }

@@ -25,37 +25,44 @@
                                 </thead>
                                 <tbody>
 
-                                    @foreach($products as $product)
-                                     <tr>
-                                        <td class="pro_img">
-                                            <img src="{{ asset($product->image) }}" alt="product" class="img-fluid w-100">
-                                        </td>
+                                    @foreach ($products as $product)
+                                        <tr>
+                                            <td class="pro_img">
+                                                <img src="{{ asset($product->image) }}" alt="product"
+                                                    class="img-fluid w-100">
+                                            </td>
 
-                                        <td class="pro_name">
-                                            <a href="#">{{ $product->name }}</a>
-                                        </td>
+                                            <td class="pro_name">
+                                                <a href="#">{{ $product->name }}</a>
+                                            </td>
 
-                                        <td class="pro_select">
-                                            <div class="quentity_btn">
-                                                <button class="btn btn-danger"><i class="fal fa-minus"></i></button>
-                                                <input type="text" placeholder="1" value="{{ $product->qty }}" min="1">
-                                                <button class="btn btn-success"><i class="fal fa-plus"></i></button>
-                                            </div>
-                                        </td>
+                                            <td class="pro_select">
+                                                <div class="quentity_btn">
+                                                    <button class="btn btn-danger decrement"
+                                                        data-id="{{ $product->id }}"><i
+                                                            class="fal fa-minus"></i></button>
+                                                    <input class="qty" type="text" placeholder="1"
+                                                        value="{{ $product->qty }}" min="1">
+                                                    <button class="btn btn-success increment"
+                                                        data-id="{{ $product->id }}"><i
+                                                            class="fal fa-plus"></i></button>
+                                                </div>
+                                            </td>
 
-                                        <td class="pro_tk">
-                                            <h6>${{ $product->price * $product->qty}}</h6>
-                                        </td>
+                                            <td class="pro_tk">
+                                                <h6>${{ $product->price * $product->qty }}</h6>
+                                            </td>
 
-                                        <td class="pro_icon">
-                                            <form action="{{ route('remove-from-cart',$product->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button ty><i class="fal fa-times"></i></button>
-                                            </form>
+                                            <td class="pro_icon">
+                                                <form action="{{ route('remove-from-cart', $product->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button ty><i class="fal fa-times"></i></button>
+                                                </form>
 
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -70,7 +77,13 @@
                         <div class="row justify-content-between">
                             <div class="col-md-6 col-xl-5 ms-auto">
                                 <div class="wsus__cart_list_pricing">
-                                    <h6>Total <span>$ 360.00</span></h6>
+                                    @php
+                                        $total = 0;
+                                        foreach ($products as $product) {
+                                            $total += $product->price * $product->qty;
+                                        }
+                                    @endphp
+                                    <h6>Total <span>$ {{ $total }}</span></h6>
                                     <p>Tax<span>12%</span></p>
                                     <p>Discount<span>$ 60.00</span></p>
                                     <h5>Sub total<span>$ 300.00</span></h5>
@@ -98,9 +111,135 @@
 
     <x-slot name="scripts">
         <script>
+            // $(document).ready(function() {
+            //     $(".increment").on("click", function() {
+            //         let qty = $(this).siblings(".qty").val();
+            //         let id = $(this).data('id');
+            //         qty = parseInt(qty) + 1;
+            //         $(this).siblings(".qty").val(qty);
+
+            //         $.ajax({
+            //             method: 'POST',
+            //             url: "{{ route('update-qty') }}",
+            //             data: {
+            //                 _token: "{{ csrf_token() }}",
+            //                 id: id,
+            //                 qty: qty,
+            //             },
+            //             success: function(data) {
+            //                 console.log(data)
+            //                 if (data.status == 'ok') {
+            //                     window.location.reload();
+            //                 }
+            //             },
+            //             error: function(xhr, status, error) {
+
+            //             }
+            //         });
+            //     });
+            //     $(".decrement").on("click", function() {
+            //         let qty = $(this).siblings(".qty").val();
+            //         let id = $(this).data('id');
+            //         if (parseInt(qty) > 1) {
+            //             qty = parseInt(qty) - 1;
+            //             $(this).siblings(".qty").val(qty);
+
+            //             $.ajax({
+            //                 method: 'POST',
+            //                 url: "{{ route('update-qty') }}",
+            //                 data: {
+            //                     _token: "{{ csrf_token() }}",
+            //                     id: id,
+            //                     qty: qty,
+            //                 },
+            //                 success: function(data) {
+            //                     if (data.status == 'ok') {
+            //                         window.location.reload();
+            //                     }
+            //                 },
+            //                 error: function(xhr, status, error) {
+
+            //                 }
+            //             });
+            //         }
+
+            //     });
+            // })
+
+            //both Enter and clicking outside change
             $(document).ready(function() {
 
-            })
+                // Increment
+                $(".increment").on("click", function() {
+
+                    let qtyInput = $(this).siblings(".qty");
+                    let qty = parseInt(qtyInput.val()) || 1;
+                    let id = $(this).data("id");
+
+                    qty++;
+
+                    qtyInput.val(qty);
+
+                    updateQty(id, qty);
+                });
+
+
+                // Decrement
+                $(".decrement").on("click", function() {
+
+                    let qtyInput = $(this).siblings(".qty");
+                    let qty = parseInt(qtyInput.val()) || 1;
+                    let id = $(this).data("id");
+
+                    if (qty > 1) {
+                        qty--;
+
+                        qtyInput.val(qty);
+
+                        updateQty(id, qty);
+                    }
+                });
+
+
+                // Manual change
+                $(".qty").on("change", function() {
+
+                    let qty = parseInt($(this).val()) || 1;
+                    let id = $(this).siblings(".increment").data("id");
+
+                    if (qty < 1) {
+                        qty = 1;
+                        $(this).val(qty);
+                    }
+
+                    updateQty(id, qty);
+                });
+
+
+                // AJAX function
+                function updateQty(id, qty) {
+
+                    $.ajax({
+                        method: "POST",
+                        url: "{{ route('update-qty') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            id: id,
+                            qty: qty
+                        },
+                        success: function(data) {
+
+                            if (data.status === "ok") {
+                                window.location.reload();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error);
+                        }
+                    });
+                }
+
+            });
         </script>
     </x-slot>
 </x-app-layout>

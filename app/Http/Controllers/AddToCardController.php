@@ -38,7 +38,14 @@ class AddToCardController extends Controller
         $cartItems = $this->cart;
         unset($cartItems[$id]);
         Session::put('cart',$cartItems);
-
+        notyf()->success("Removed sucess!");
         return redirect()->back();
+    }
+    function updateQty(Request $request){
+        $cartItems = $this->cart;
+        $cartItems[$request->id]['qty'] = $request->qty;
+        Session::put('cart',$cartItems);
+        notyf("update sucess!");
+        return response(['status'=>'ok']);
     }
 }

@@ -9,8 +9,8 @@ class CartPageController extends Controller
 {
     function index(){
 
-        //$products = Session::get('cart', []);
-
+        // $products = Session::get('cart', []);
+        //$product = collect($products);
         //convert to obj
         $products = collect(Session::get('cart', []))
         ->map(fn ($product) => (object) $product);
