@@ -26,10 +26,7 @@
                                 <tbody>
 
                                     @foreach($products as $product)
-                                    @php
-                                        dd($product);
-                                    @endphp
-                                     {{-- <tr>
+                                     <tr>
                                         <td class="pro_img">
                                             <img src="{{ asset($product->image) }}" alt="product" class="img-fluid w-100">
                                         </td>
@@ -41,19 +38,24 @@
                                         <td class="pro_select">
                                             <div class="quentity_btn">
                                                 <button class="btn btn-danger"><i class="fal fa-minus"></i></button>
-                                                <input type="text" placeholder="1">
+                                                <input type="text" placeholder="1" value="{{ $product->qty }}" min="1">
                                                 <button class="btn btn-success"><i class="fal fa-plus"></i></button>
                                             </div>
                                         </td>
 
                                         <td class="pro_tk">
-                                            <h6>${{ $product->price }}</h6>
+                                            <h6>${{ $product->price * $product->qty}}</h6>
                                         </td>
 
                                         <td class="pro_icon">
-                                            <a href="#"><i class="fal fa-times"></i></a>
+                                            <form action="{{ route('remove-from-cart',$product->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button ty><i class="fal fa-times"></i></button>
+                                            </form>
+
                                         </td>
-                                    </tr> --}}
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>

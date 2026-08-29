@@ -130,7 +130,6 @@
     <!--============================
        PRODUCT DETAILS END
     =============================-->
-
     <x-slot name="scripts">
         <script>
             $(document).ready(function() {
@@ -138,7 +137,7 @@
                     e.preventDefault();
                     let id = $(this).data('id');
                     let color = $('.color').val();
-                    let qty = $('.qty').val();
+                    let qty = parseInt($('.qty').val()) || 1;
 
                     $.ajax({
                         method: "POST",
@@ -149,14 +148,14 @@
                             qty: qty
                         },
                         beforeSend: function() {
-                            if (validation()) {
-                                validation();
-                                return false;
+                            if(validation()){
+                                return false
                             }
                         },
                         success: function(data) {
                             if(data.status == 'ok'){
                                 $('cart-count').html(data.cart_count);
+                                window.location.reload();
                             }
                         },
                         error: function(xhr, status, error) {}
@@ -169,7 +168,7 @@
                 });
                 $(".decrement").on("click", function() {
                     let qty = $(".qty").val();
-                    if (parseInt(qty) >= 1) {
+                    if (parseInt(qty) > 1) {
                         qty = parseInt(qty) - 1;
                         $(".qty").val(qty);
                     }
@@ -177,9 +176,11 @@
 
                 function validation() {
                     let color = $('.color').val();
-                    if (color == "") {
-                        console.log("Color is required!");
+                    if (!color) {
+                        alert("Please choose color");
+                        return true;
                     }
+                    return false;
                 }
             })
         </script>

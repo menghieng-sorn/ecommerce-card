@@ -14,6 +14,7 @@ Route::get('/product-detail/{id}',[ProductPageController::class,'show'])->name('
 Route::post('/add-to-cart/{id}', [AddToCardController::class, 'store'])
     ->name('add-to-cart');
 Route::get('/cart',[CartPageController::class,'index'])->name('cart.index');
+Route::delete('/remove-from-cart/{id}',[AddToCardController::class,'destroy'])->name('remove-from-cart');
 
 Route::get('/dashboard',[ProductController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

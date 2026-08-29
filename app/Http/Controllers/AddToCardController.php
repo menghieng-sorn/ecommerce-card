@@ -10,7 +10,7 @@ class AddToCardController extends Controller
 {
     public $cart = [];
 
-    function __construct()
+    public function __construct()
     {
         $this->cart = Session::get('cart',[]);
     }
@@ -23,8 +23,8 @@ class AddToCardController extends Controller
             'image'=> $product->image,
             'name'=> $product->name,
             'price'=> $product->price,
-            'color'=> $product->color,
-            'qty'=> $product->qty,
+            'color'=> $request->color,
+            'qty'=> $request->qty,
         ];
         Session::put('cart',$this->cart);
 
@@ -33,5 +33,12 @@ class AddToCardController extends Controller
             'message'=>'Product added to cart',
             'cart_count'=>count($this->cart)
         ]);
+    }
+    public function destroy($id){
+        $cartItems = $this->cart;
+        unset($cartItems[$id]);
+        Session::put('cart',$cartItems);
+
+        return redirect()->back();
     }
 }

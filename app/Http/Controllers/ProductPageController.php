@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 class ProductPageController extends Controller
 {
     function index(){
+        // session()->flush();
         $products = Product::all();
         return view('pages.home',compact('products'));
     }
